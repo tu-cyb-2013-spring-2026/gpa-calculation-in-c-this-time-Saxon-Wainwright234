@@ -75,12 +75,12 @@ int main(){
         char * semester = strtok(NULL, " ");
         char * year = strtok(NULL, " ");
 
-        if (year == NULL){
-            printf("that wasnt a valid answer please rerun and try again");
-            abort();
+        if (year == NULL || atoi(year) > 2026){
+            printf("that wasnt a valid answer please rerun and try again\n");
+            continue;
 
         }
-        
+
 
         strcpy(courses[count].grade, grade);
         courses[count].hours = atoi(hours);
@@ -91,7 +91,7 @@ int main(){
     }
      int totalTotalHours = 0;
     float totalTotalPoint = 0.0;
-    printf("Unoffical Transcript ----------------------------------");
+    printf("Unoffical Transcript ----------------------------------\n");
     int seen[100]={0};
     int length = sizeof(seen) / sizeof(seen[0]);
     for (int i = 0; i < count; i++) {
@@ -99,19 +99,17 @@ int main(){
             seen[i] = 1;
             int totalhours = courses[i].hours;
             float totalPoints = gradeToPoint(courses[i].grade) * courses[i].hours;
-            totalTotalPoint = totalTotalPoint + totalPoints;
-            totalTotalHours = totalTotalHours + totalhours;
+
             for(int j = i+1; j<count; j++){
                 if (courses[j].year == courses[i].year && strcmp(courses[j].semester, courses[i].semester) ==0){
                     seen[j] = 1;
                     totalhours = totalhours + courses[j].hours;
-                    totalPoints = totalPoints + (gradeToPoint(courses[j].grade));
-                    totalTotalHours = totalTotalHours + totalhours;
-                    totalTotalPoint = totalTotalPoint + totalPoints;
+                    totalPoints = totalPoints + (gradeToPoint(courses[j].grade) * courses[j].hours);
                 }
-         
-        }
         
+        }
+        totalTotalHours = totalTotalHours + totalhours;
+        totalTotalPoint = totalTotalPoint + totalPoints;
         printf("%s %d (%d hours) %.3f\n", courses[i].semester, courses[i].year, totalhours, totalPoints / totalhours);
         
 
@@ -128,6 +126,6 @@ int main(){
 
     }
 
-    printf("%.3f final gpa", totalTotalHours/totalTotalPoint);
+    printf("%.3f final gpa", totalTotalPoint/totalTotalHours);
     return 0;
 }
