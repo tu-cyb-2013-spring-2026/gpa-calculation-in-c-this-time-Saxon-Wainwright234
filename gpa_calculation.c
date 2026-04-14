@@ -43,6 +43,7 @@ float gradeToPoint(char upperGrade[]){
 
 }
 
+
 int main(){
     int going = 1;
     
@@ -68,10 +69,18 @@ int main(){
             going = 0;
             break;
         }
+
         char * grade = strtok(formatGrades, " ");
         char * hours = strtok(NULL, " ");
         char * semester = strtok(NULL, " ");
         char * year = strtok(NULL, " ");
+
+        if (year == NULL){
+            printf("that wasnt a valid answer please rerun and try again");
+            abort();
+
+        }
+        
 
         strcpy(courses[count].grade, grade);
         courses[count].hours = atoi(hours);
@@ -80,9 +89,9 @@ int main(){
         count++;
         
     }
-    int totalTotalHours = 0;
+     int totalTotalHours = 0;
     float totalTotalPoint = 0.0;
-    
+    printf("Unoffical Transcript ----------------------------------");
     int seen[100]={0};
     int length = sizeof(seen) / sizeof(seen[0]);
     for (int i = 0; i < count; i++) {
@@ -96,7 +105,7 @@ int main(){
                 if (courses[j].year == courses[i].year && strcmp(courses[j].semester, courses[i].semester) ==0){
                     seen[j] = 1;
                     totalhours = totalhours + courses[j].hours;
-                    totalPoints = totalPoints + (gradeToPoint(courses[j].grade) * courses[j].hours);
+                    totalPoints = totalPoints + (gradeToPoint(courses[j].grade));
                     totalTotalHours = totalTotalHours + totalhours;
                     totalTotalPoint = totalTotalPoint + totalPoints;
                 }
@@ -111,13 +120,14 @@ int main(){
     }
     
     }
+    printf("---------\n");
+    printf("%d total hours \n",totalTotalHours);
+    if (totalTotalPoint == 0){
+        printf("You havent entered any grade");
+        abort();
 
-printf("%d total hours this semester and final gpa %.3f\n",totalTotalHours, totalTotalPoint/totalTotalHours);
+    }
 
-
-    
-
-
-
+    printf("%.3f final gpa", totalTotalHours/totalTotalPoint);
     return 0;
 }
